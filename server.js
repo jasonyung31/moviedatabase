@@ -1,9 +1,9 @@
-//const MongoClient = require('mongodb').MongoClient;
-//const ObjectID = require('mongodb').ObjectID;
-
+const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
+const assert = require('assert');
 const mongourl = 'mongodb://s1316117:s1316117@ac-ejy2hrk-shard-00-00.yt4veip.mongodb.net:27017,ac-ejy2hrk-shard-00-01.yt4veip.mongodb.net:27017,ac-ejy2hrk-shard-00-02.yt4veip.mongodb.net:27017/?ssl=true&replicaSet=atlas-pel08v-shard-0&authSource=admin&retryWrites=true&w=majority';
 const dbname = '381projects';
-const assert = required('assert');
+
 const express = require('express');
 const session = require('cookie-session');
 const bodyParser = require('body-parser');
@@ -55,13 +55,23 @@ app.post('/logout', (req,res) => {
 	res.redirect('/login');
 });
 
+//home page
+app.get('/home', (req,res) => {
+		res.render('home',{})
+	});
+
+app.post('/home', (req,res) => {
+		res.render('home',{})
+	});
+
 const createDoc = function(db, createddoc, callback){
-    const client = new mongoclient(mongourl);
+    const client = new MongoClient(mongourl);
     client.connect(function(err) {
         assert.equal(null, err);
         console.log("Connected successfully to the MongoDB Movie database server.");
         const db = client.db(dbName);
-        db.collection('movies').insertOne(createddocuments, function(error, results){
+	const moviescollection = db.collection('movies');
+        moviecollection.insertOne(createddocuments, function(error, results){
             if(error){
             	throw error
             };
@@ -88,17 +98,16 @@ const createDoc = function(db, createddoc, callback){
 });
 
     // READ
-    app.get('/film', (req, res) => {
-        Movie.find({}, (err, movies) => {
-            if (err) {
-                res.status(500).send('Error fetching the films.');
-                return;
-            }
-            if (result) {
-                res.status(200).send(result);
-            }
-        });
+    app.get('/showAll', (req, res) => {
+        moviecollection.find()
+	.toArray()
+	.then((movies) => {
+		res.render('showAll.ejs');})
+	.catch((error) => {
+    console.error('Failed to fetch the movie details.', error);
+    res.status(500).json({ message: 'Failed to fetch the movie details.' });
     });
+});
 
     // - UPDATE
     app.put('/update/:id', (req, res) => {
