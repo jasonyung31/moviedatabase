@@ -1,9 +1,8 @@
 //const MongoClient = require('mongodb').MongoClient;
 //const ObjectID = require('mongodb').ObjectID;
 
-const mongourl = 'mongodb+srv://s1316117:<s1316117>@test.yt4veip.mongodb.net/?retryWrites=true&w=majority';
+const mongourl = 'mongodb+srv://s1316117:s1316117@test.yt4veip.mongodb.net/?retryWrites=true&w=majority';
 const dbname = 'test';
-
 const express = require('express');
 const session = require('cookie-session');
 const bodyParser = require('body-parser');
@@ -49,13 +48,14 @@ app.post('/login', (req,res) => {
 	res.redirect('/');
 });
 
-app.get('/logout', (req,res) => {
-	req.session = null;   
-	res.redirect('/');
+app.post('/logout', (req,res) => {
+	req.session = null; 
+	res.status(200).json({ message: 'Logout successful' });  
+	res.redirect('/login');
 });
 
 const createDoc = function(db, createddoc, callback){
-    const client = new MongoClient(mongourl);
+    const client = new mongoclient(mongourl);
     client.connect(function(err) {
         assert.equal(null, err);
         console.log("Connected successfully to the MongoDB Movie database server.");
