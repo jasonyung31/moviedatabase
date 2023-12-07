@@ -1,12 +1,23 @@
+
 <!DOCTYPE html>
-<html>
-    <body>
-        <h1>All Movies</h1>
-        <ul>
-            <% movies.forEach(function(movies) { %>
-        	<li><%= movies.title %></li>
-            <% } %>
-        </ul>
-        <a href="/home">Home page</a>
-    </body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      body {
+        margin: 100px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>All Movies Are Here</h2>
+    <ul>
+      <% result.forEach((result)=>{ %>
+          <li><%= result.film %> <%= result.director %> <%= result.year %> </li>
+      <%})%>
+    </ul>
+
+    
+  </body>
 </html>
