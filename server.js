@@ -107,7 +107,7 @@ const createDoc = function(db, createddoc, callback){
                 res.redirect('/home');
             }
         }catch(err){
-            res.status(400).json({message: err.message});
+            res.status(400).json({message:err.message});
         }finally{await db.client.close()};
     });
 
@@ -119,7 +119,7 @@ const createDoc = function(db, createddoc, callback){
             let result = await db.collection("Movie").find().toArray();
             res.render('showAll', {result});
         }catch(err){
-            res.status(500).json({ message: 'Failed to fetch the movie details.' });
+            res.status(500).json({message:'Failed to fetch the movie details.'});
         }finally{await db.client.close()};
     });
 
