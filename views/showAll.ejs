@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -14,7 +13,16 @@
     <h2>All Movies Are Here</h2>
     <ul>
       <% result.forEach((result)=>{ %>
-          <li><%= result.film %> <%= result.director %> <%= result.year %> </li>
+        <li><%= result.film %> <%= result.director %> <%= result.year %> <%= result.boxOffice%> 
+            <button onclick="update()">Update</button>
+              <script>
+                function update() {
+                fetch('/update/<%=result._id%>', {method: 'POST'})
+                window.location.href = '/update/<%=result._id%>';
+                }
+              </script>
+        </li>
+              
       <%})%>
     </ul>
 
