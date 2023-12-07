@@ -3,7 +3,6 @@ const ObjectID = require('mongodb').ObjectID;
 const assert = require('assert');
 const mongourl = 'mongodb://s1316117:s1316117@ac-ejy2hrk-shard-00-00.yt4veip.mongodb.net:27017,ac-ejy2hrk-shard-00-01.yt4veip.mongodb.net:27017,ac-ejy2hrk-shard-00-02.yt4veip.mongodb.net:27017/?ssl=true&replicaSet=atlas-pel08v-shard-0&authSource=admin&retryWrites=true&w=majority';
 const dbname = '381projects';
-
 const express = require('express');
 const session = require('cookie-session');
 const bodyParser = require('body-parser');
@@ -20,7 +19,7 @@ const users = new Array(
 app.use(session({
     name: 'sessionLogin',
     keys:[SECRETKEY]
-}))
+}));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -33,6 +32,7 @@ app.get('/', (req,res) => {
 		res.status(200).render('secrets',{name:req.session.username});
 	}
 });
+
 
 //login
 app.get('/login', (req,res) => {
@@ -49,14 +49,26 @@ app.post('/login', (req,res) => {
 	res.redirect('/');
 });
 
-app.post('/logout', (req,res) => {
+app.get('/logout', (req,res) => {
 	req.session = null; 
-	res.status(200).json({ message: 'Logout successful' });  
 	res.redirect('/login');
 });
 
+const checkAuth = (req,res,next) =>{
+    if (req.session.authenticated){
+        next();
+    } else {
+        res.redirect('/login');
+        
+    }
+};
+
+app.get('/secret', checkAuth,(req,res) =>{
+        res.render('secret',{})
+    });
+
 //home page
-app.get('/home', (req,res) => {
+app.get('/home', checkAuth, (req,res) => {
 		res.render('home',{})
 	});
 
