@@ -112,7 +112,7 @@ const createDoc = function(db, createddoc, callback){
     });
 
 // READ
-     app.get('/showAll', async function(req, res) => {
+     app.get('/showAll', async(req, res) => {
         const client = new MongoClient(mongourl);
         const db = client.db(dbName);
         try{
