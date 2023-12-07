@@ -2,7 +2,7 @@ const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 const assert = require('assert');
 const mongourl = 'mongodb://s1316117:s1316117@ac-ejy2hrk-shard-00-00.yt4veip.mongodb.net:27017,ac-ejy2hrk-shard-00-01.yt4veip.mongodb.net:27017,ac-ejy2hrk-shard-00-02.yt4veip.mongodb.net:27017/?ssl=true&replicaSet=atlas-pel08v-shard-0&authSource=admin&retryWrites=true&w=majority';
-const dbname = '381projects';
+const dbName = '381projects';
 const express = require('express');
 const session = require('cookie-session');
 const bodyParser = require('body-parser');
