@@ -4,13 +4,13 @@
     <title>home</title>
   </head>
    <body>
-      <H1>Hello!<H1>
-      <H2>Welcome to Movie Database System</H2>
+      <H1>Hello!<H1> 
+      <H2>Wellcome to Movie Database System</H2>
       <br>
       <button onclick="home()">Home</button>
           <script>
           function home() {
-          fetch('/home', {method: 'post'})
+          fetch('/home', {method: 'POST'})
           window.location.href = '/home';
           }
           </script>
@@ -18,15 +18,15 @@
       <button onclick="create()">Create Page</button>
           <script>
           function create() {
-          fetch('/create', {method: 'post'})
+          fetch('/create', {method: 'POST'})
           window.location.href = '/create';
           }
           </script>
       <br>
-      <button onclick="showall()">Showall</button>
+      <button onclick="showAll()">Show All Movies Page</button>
           <script>
-          function showall() {
-          fetch('/showAll', {method: 'post'})
+          function showAll() {
+          fetch('/showAll', {method: 'POST'})
           window.location.href = '/showAll';
           }
           </script>
@@ -34,10 +34,9 @@
       <button onclick="logout()">Logout</button>
           <script>
           function logout() {
-          fetch('/logout', {method: 'post'})
-          window.location.href = '/logout';
+          fetch('/logout', {method: 'POST'})
+          window.location.href = '/login';
           }
           </script>
       <br>
    </body>
-</html>
