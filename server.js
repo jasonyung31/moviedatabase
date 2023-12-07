@@ -111,16 +111,15 @@ const createDoc = function(db, createddoc, callback){
     });
 
 // READ
-    app.get('/showAll', (req, res) => {
-        moviecollection.find()
-	.toArray()
-	.then((movies) => {
-		res.render('showAll.ejs');})
-	.catch((error) => {
-    console.error('Failed to fetch the movie details.', error);
-    res.status(500).json({ message: 'Failed to fetch the movie details.' });
+     app.get('/showAll', async(req, res) => {
+        const client = new MongoClient(mongourl);
+        const db = client.db(dbName);
+        let result = await db.collection("Movie").find().toArray();
+        res.render('showAll', {result});
+
+        console.error('Failed to fetch the movie details.', error);
+        res.status(500).json({ message: 'Failed to fetch the movie details.' });
     });
-});
 
     // - UPDATE
     app.put('/update/:id', (req, res) => {
