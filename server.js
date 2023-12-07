@@ -94,7 +94,7 @@ const createDoc = function(db, createddoc, callback){
 }
 
 //CREATE
-    app.get('/create',function(req,res,next){
+   app.get('/create',function(req,res,next){
         res.render('create');
     })
     app.post('/create',async function (req,res,next){
@@ -112,7 +112,7 @@ const createDoc = function(db, createddoc, callback){
     });
 
 // READ
-    app.get('/showAll', async(req, res) => {
+     app.get('/showAll', async(req, res) => {
         const client = new MongoClient(mongourl);
         const db = client.db(dbName);
         try{
@@ -120,7 +120,7 @@ const createDoc = function(db, createddoc, callback){
             res.render('showAll', {result});
         }catch(err){
             res.status(500).json({ message: 'Failed to fetch the movie details.' });
-        }        
+        }finally{await db.client.close()};
     });
 
     // - UPDATE
