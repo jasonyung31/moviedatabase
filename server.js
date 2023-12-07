@@ -94,22 +94,23 @@ const createDoc = function(db, createddoc, callback){
 }
 
 //CREATE
-    app.post('/create', (req, res) => {
-  		const { title, genre, year } = req.body;
-  		const new_Movie = new Movie({ title, genre, year });
+    app.get('/create',function(req,res,next){
+        res.render('create');
+    })
+    app.post('/create',async function (req,res,next){
+        const client = new MongoClient(mongourl);
+        const db = client.db(dbName);
+        try{
+            let result = await db.collection("Movie").insertOne(req.body);
+            console.log(result);
+            res.redirect('/home');
+            
+        }catch(err){
+            res.status(400).json({message: err.message});
+        }finally{await db.client.close()};
+    });
 
-  	new_Movie.save((err) => {
-    	if (err) {
-      		console.error('Error creating movie:', err);
-      		res.status(500).send('An error occurred');
-    	} 
-	else {
-    	  	res.send('A new movie is created successfully');
-    	}
-  });
-});
-
-    // READ
+// READ
     app.get('/showAll', (req, res) => {
         moviecollection.find()
 	.toArray()
