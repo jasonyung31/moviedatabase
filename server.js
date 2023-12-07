@@ -149,4 +149,123 @@ const createDoc = function(db, createddoc, callback){
             res.status(200).send(result);
         });
     });
+
+/*  CREATE
+curl -X POST -H "Content-Type: application/json" --data '{"film":"The Godfather","director":"Francis Ford Coppola","year":"1972"}' localhost:8099/api/movie/TheGodfather
+curl -X POST -F 'bookingid=TheGodfather' localhost:8099/api/movie/TheGodfather
+*/
+
+  app.post('/api/movie/:film',(req,res) => {
+        if (req.params.film){
+            console.log(req.body)
+            const client = new MongoClient(mongourl);
+            client.connect((err) => {
+                assert.equal(null,err);
+                console.log("You have connected to the server");
+                const db = client.db(dbName);
+                let newDoc = {};
+                newDoc['film'] = req.fields.film;
+                newDoc['director'] = req.fields.director;
+                newDoc['year'] = req.fields.year;
+                newDoc['box'] = req.fields.box;
+                if(req.files.filetoupload && req.files.filetoupload.size > 0){
+                    fs.readFile(req.files.filetoupload.path, (err,data) => {
+                        assert.equal(err,null);
+                        db.collection('Movie').insertOne(newDoc,(err,results) => {
+                            assert.equal(err,null);
+                            client.close()
+                            res.status(200).json({"Inserted successfully":newDoc}).end();
+                        })
+                    });
+                }
+            })
+        } else {
+        res.status(500).json({"error": "missing film"});
+        }
+    });
+
+/* READ
+curl -X GET http://localhost:8099/api/movie/HarryPotter
+*/
+
+app.get('/api/movie/:film', (req,res) => {
+    if (req.params.film) {
+        let standard ={};
+        standard['film'] = req.params.film;
+        const client = new MongoClient(mongourl);
+        client.connect((err) => {
+            assert.equal(null, err);
+            console.log("You have connected to the server");
+            const db = client.db(dbName);
+
+            createDoc(db, standard, (doc) => {
+                client.close();
+                console.log("The DB connection have been closed");
+                res.status(200).json(doc);
+            })
+        })
+    } else {
+        res.status(500).json({"error": "missing film"}).end();
+    }
+});
+
+/*  UPDATE
+curl -X PUT -H "Content-Type: application/json" --data '{"year":"1972"}' localhost:8099/api/movie/TheGodfather
+curl -X PUT -F "year=2023" localhost:8099/api/movie/TheGodfather 
+*/
+
+app.put('/api/movie/film', (req,res) => {
+    if(req.params.film) {
+        console.log(req.body)
+        const client = new MongoClient(mongourl);
+        client.connect((err) => {
+            assert.equal(null,err);
+            console.log("You have connected to the server");
+            const db = client.db(dbName);
+
+            let standard = {}
+            standard['film'] = req.params.film
+
+            let docUpdate = {}
+            Object.keys(req.fields).forEach((key) => {
+                docUpdate[key] = req.fields[key];
+            })
+            console.log(docUpdate)
+            if (req.files.filetoupload && req.files.filetoupload.size > 0) {
+                fs.readFile(req.files.filetoupload.path, (err,data) => {
+                    assert.equal(err,null);
+                    db.collection('Movie').updateOne(criteria, {$set: updateDoc},(err,results) => {
+                        assert.equal(err,null);
+                        client.close()
+                        res.status(200).json(results).end();
+                    })
+                })
+            }
+        })
+    }
+});
+
+/*  DELETE
+curl -X DELETE localhost:8099/api/movie/movie/TheGodfather 
+*/
+
+app.delete('api/movie/:film', (req,res) => {
+    if(req.params.film) {
+        let standard = {};
+        standard['film'] = req.params.film;
+        const client = new MongoClient(mongourl);
+        client.connect((err) => {
+            assert.equal(null, err);
+            console.log("You have connected to the server");
+            const db = client.db(dbName);
+            db.collection('Movie').deleteMany(standard,(err,results) => {
+                assert.equal(err,null)
+                client.close()
+                res.status(200).json(results).end();
+            })
+        });
+    } else {
+    res.status(500).json({"error": "missing film"}).end();
+    }
+});
 app.listen(process.env.PORT || 8099);
