@@ -101,24 +101,26 @@ const createDoc = function(db, createddoc, callback){
         const client = new MongoClient(mongourl);
         const db = client.db(dbName);
         try{
-            let result = await db.collection("Movie").insertOne(req.body);
-            console.log(result);
-            res.redirect('/home');
-            
+            if(req.body.length!=0){
+                let result = await db.collection("Movie").insertOne(req.body);
+                console.log(result);
+                res.redirect('/home');
+            }
         }catch(err){
             res.status(400).json({message: err.message});
         }finally{await db.client.close()};
     });
 
 // READ
-     app.get('/showAll', async(req, res) => {
+    app.get('/showAll', async(req, res) => {
         const client = new MongoClient(mongourl);
         const db = client.db(dbName);
-        let result = await db.collection("Movie").find().toArray();
-        res.render('showAll', {result});
-
-        console.error('Failed to fetch the movie details.', error);
-        res.status(500).json({ message: 'Failed to fetch the movie details.' });
+        try{
+            let result = await db.collection("Movie").find().toArray();
+            res.render('showAll', {result});
+        }catch(err){
+            res.status(500).json({ message: 'Failed to fetch the movie details.' });
+        }        
     });
 
     // - UPDATE
